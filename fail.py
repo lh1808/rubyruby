@@ -44,3 +44,6 @@ Excel file format cannot be determined, you must specify an engine manually.
 
 
 Backend nicht erreichbar: Unexpected token 'N', ..."L":{"max":NaN,"mean""... is not valid JSON. Prüfe die Verbindung in der Sidebar.
+
+
+Missing optional dependency 'openpyxl'. Use pip or conda to install openpyxl.
