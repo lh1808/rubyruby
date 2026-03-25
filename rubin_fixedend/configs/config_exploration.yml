@@ -1,0 +1,74 @@
+# ============================================================
+# EXPLORATION – Schnelle Iteration auf Teilmenge
+# ============================================================
+# 10% Sampling + wenige Trials + kompakter Search Space.
+# Engere Ranges = schnellere Konvergenz bei wenigen Trials.
+#
+#   python run_analysis.py --config configs/config_exploration.yml
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_exploration
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+
+data_processing:
+  df_frac: 0.1
+  cross_validation_splits: 3
+
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+    - XLearner
+    - DRLearner
+
+base_learner:
+  type: lgbm
+  fixed_params: {}
+
+tuning:
+  enabled: true
+  n_trials: 10
+  cv_splits: 3
+  search_space:
+    # Engere Ranges für schnelle Orientierung bei wenigen Trials.
+    # Fokus auf die wirkungsvollsten Parameter.
+    lgbm:
+      n_estimators:        {type: int,   low: 200,    high: 1000}
+      learning_rate:       {type: float, low: 0.01,   high: 0.15,  log: true}
+      num_leaves:          {type: int,   low: 15,     high: 127}
+      max_depth:           {type: int,   low: 3,      high: 8}
+      min_child_samples:   {type: int,   low: 10,     high: 200}
+      min_child_weight:    {type: float, low: 0.01,   high: 50.0,  log: true}
+      subsample:           {type: float, low: 0.5,    high: 1.0}
+      colsample_bytree:    {type: float, low: 0.3,    high: 0.9}
+      min_split_gain:      {type: float, low: 0.0,    high: 1.0}
+      reg_alpha:           {type: float, low: 1.0e-6, high: 20.0,  log: true}
+      reg_lambda:          {type: float, low: 1.0e-6, high: 20.0,  log: true}
+      path_smooth:         {type: float, low: 0.0,    high: 10.0}
+    catboost:
+      iterations:                  {type: int,         low: 200,    high: 1500}
+      learning_rate:               {type: float,       low: 0.01,   high: 0.15,  log: true}
+      depth:                       {type: int,         low: 4,      high: 8}
+      l2_leaf_reg:                 {type: float,       low: 1.0,    high: 30.0,  log: true}
+      random_strength:             {type: float,       low: 0.01,   high: 10.0,  log: true}
+      subsample:                   {type: float,       low: 0.5,    high: 1.0}
+      rsm:                         {type: float,       low: 0.3,    high: 0.9}
+      min_data_in_leaf:            {type: int,         low: 10,     high: 200}
+      model_size_reg:              {type: float,       low: 0.0,    high: 10.0}
+      leaf_estimation_iterations:  {type: int,         low: 1,      high: 10}
+
+  single_fold: true
+bundle:
+  enabled: false
+
+selection:
+  metric: qini
+  higher_is_better: true
