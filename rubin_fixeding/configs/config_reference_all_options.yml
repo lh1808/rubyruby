@@ -1,0 +1,284 @@
+# ============================================================
+# REFERENZ-KONFIGURATION – Alle unterstützten Felder
+# ============================================================
+# Nachschlagewerk mit jedem Parameter inkl. Erklärung.
+# Nicht als Startpunkt für Läufe gedacht – dafür die anderen
+# Configs verwenden.
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_reference
+
+constants:
+  SEED: 42
+  # Parallelisierungs-Level (1–4):
+  #   1 = Minimal:  1 Kern, alles sequentiell (sicherste Option)
+  #   2 = Moderat:  alle Kerne pro Fit, Folds/Trials sequentiell (Default)
+  #   3 = Hoch:     Kerne aufgeteilt, 2–4 Folds + Trials parallel
+  #   4 = Maximum:  Kerne aufgeteilt, max. Folds + Trials parallel (höchster RAM)
+  parallel_level: 2         # 1=Minimal, 2=Moderat (Default), 3=Hoch, 4=Maximum
+  # Level steuert: Tuning-Trials, CV-Folds, Feature-Selektion, Evaluation
+  # Level 1-2: DRTester-Plots für alle Modelle
+  # Level 3: DRTester nur für Champion + Challenger, sklift für alle
+  # Level 4: DRTester nur für Champion, sklift für alle
+
+# --- DataPrep (optional) -------------------------------------
+data_prep:
+  data_path: [data/raw/input.csv]
+  feature_path: data/raw/feature_dictionary.xlsx
+  info_path: null
+  output_path: data/processed
+  delimiter: ","
+  chunksize: 300000
+  sas_encoding: utf-8
+  target: Y
+  treatment: T
+  score_name: null
+  score_as_feature: false
+  target_replacement: {}
+  treatment_replacement: {}
+  multiple_files_option: merge              # "merge" | "treatment_only"
+  control_file_index: 0
+  binary_target: true
+  fill_na_method: median                    # "median" | "mean" | "zero" | "mode" | null
+  deduplicate: false                        # true: Kunden auf 1 Eintrag pro ID reduzieren
+  deduplicate_id_column: null               # Spaltenname der Kunden-ID (z. B. "PARTNER_ID")
+  eval_data_path: null                       # Separater Eval-Datensatz (fit-on-train, transform-on-eval)
+  log_to_mlflow: false
+  mlflow_experiment_name: null
+
+# --- Eingabedateien -------------------------------------------
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+  s_file: null                              # Optionaler historischer Score
+  # Externe Evaluationsdaten (optional, für validate_on: external)
+  eval_x_file: null                          # Separater Eval-Datensatz (Features)
+  eval_t_file: null                          # Separater Eval-Datensatz (Treatment)
+  eval_y_file: null                          # Separater Eval-Datensatz (Outcome)
+  eval_s_file: null                          # Separater Eval-Datensatz (Score, optional)
+  dtypes_file: data/processed/dtypes.json
+
+# --- Historischer Score ---------------------------------------
+historical_score:
+  name: historical_score
+  column: S
+  higher_is_better: true
+
+# --- Datenverarbeitung ----------------------------------------
+data_processing:
+  reduce_memory: true                       # Datentypen downcasten (float64→float32 etc.) – in DataPrep und Analyse-Pipeline aktiv
+  df_frac: null                             # Downsampling (0..1]
+  test_size: 0.0                            # Holdout-Anteil
+  validate_on: cross                        # "cross" | "holdout" | "external"
+  cross_validation_splits: 5
+
+# --- Treatment-Typ --------------------------------------------
+# Bei "binary" (Default): T in {0, 1}, ein skalarer CATE.
+# Bei "multi": T in {0, 1, ..., K-1}, K-1 CATE-Werte pro Beobachtung.
+# Wichtig: SLearner, TLearner und XLearner sind bei "multi" nicht verfuegbar.
+treatment:
+  type: binary                              # "binary" | "multi"
+  reference_group: 0                        # Baseline/Control-Gruppe
+
+# --- Feature-Selektion ---------------------------------------
+# Mehrere Methoden können kombiniert werden (Union der Top-X%).
+# "lgbm_importance": LightGBM auf Outcome, Gain-Importance (schnell)
+# "lgbm_permutation": LightGBM auf Outcome, Permutation-Importance (robuster)
+# "causal_forest": GRF CausalForest Feature-Importances (kausale Relevanz)
+#   Hinweis: causal_forest (GRF) kann keine fehlenden Werte verarbeiten.
+#   Bei NaN in den Daten wird die Methode automatisch übersprungen.
+feature_selection:
+  enabled: false
+  methods: [lgbm_importance, causal_forest]  # Union der Top-Features
+  top_pct: 15.0                              # Top-X% pro Methode behalten
+  max_features: null                         # Absolute Obergrenze nach Union
+  correlation_threshold: 0.9
+
+# --- Modellauswahl -------------------------------------------
+# Hinweis: CausalForestDML basiert auf GRF und kann keine fehlenden Werte
+# verarbeiten. Bei NaN in den Daten wird CausalForestDML automatisch
+# übersprungen. Alle anderen Modelle sind NaN-tolerant (via LightGBM/CatBoost).
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+    - XLearner
+    - DRLearner
+    - NonParamDML
+    - ParamDML                              # Nutzt LinearDML (lineare CATE)
+    - CausalForestDML
+
+# --- Base Learner --------------------------------------------
+base_learner:
+  type: lgbm                                # "lgbm" | "catboost"
+  fixed_params: {}
+
+# --- CausalForestDML -----------------------------------------
+causal_forest:
+  forest_fixed_params:
+    n_jobs: -1
+  use_econml_tune: false
+  econml_tune_params: auto
+  tune_max_rows: 200000
+
+# --- Base-Learner-Tuning (Optuna) ----------------------------
+# Optimiert die Nuisance-Modelle (Outcome, Propensity).
+# Diese sind Klassifikatoren (Binary Outcome / Binary Treatment).
+tuning:
+  enabled: true
+  n_trials: 30
+  timeout_seconds: null
+  cv_splits: 3                            # Empfehlung: gleicher Wert wie data_processing.cross_validation_splits
+  single_fold: false                       # true = nur 1 Fold pro Trial evaluieren (schneller, verrauschter)
+  metric: log_loss
+  per_learner: false
+  per_role: false
+  # max_tuning_rows: null  # null = alle Daten. Zahl = Limit (z.B. 200000 für Speed)
+  storage_path: null
+  study_name_prefix: baselearner
+  reuse_study_if_exists: true
+  optuna_seed: 42
+  search_space:
+    # --- LightGBM Nuisance (Classifier) ---
+    # Ziel: Gut kalibrierte P(Y|X) und P(T|X). Sauberes Signal (Y/T ∈ {0,1}),
+    # daher moderate Komplexität erlaubt. Optimiert auf log_loss (Kalibrierung).
+    lgbm:
+      n_estimators:        {type: int,   low: 200,    high: 1000}
+      learning_rate:       {type: float, low: 0.01,   high: 0.15,  log: true}
+      num_leaves:          {type: int,   low: 15,     high: 127}
+      max_depth:           {type: int,   low: 3,      high: 8}
+      min_child_samples:   {type: int,   low: 10,     high: 200}
+      min_child_weight:    {type: float, low: 0.01,   high: 50.0,  log: true}
+      subsample:           {type: float, low: 0.5,    high: 1.0}
+      colsample_bytree:    {type: float, low: 0.3,    high: 0.9}
+      min_split_gain:      {type: float, low: 0.0,    high: 1.0}
+      reg_alpha:           {type: float, low: 1.0e-6, high: 20.0,  log: true}
+      reg_lambda:          {type: float, low: 1.0e-6, high: 20.0,  log: true}
+      path_smooth:         {type: float, low: 0.0,    high: 10.0}
+    # --- CatBoost Nuisance (Classifier) ---
+    catboost:
+      iterations:                  {type: int,         low: 200,    high: 1500}
+      learning_rate:               {type: float,       low: 0.01,   high: 0.15,  log: true}
+      depth:                       {type: int,         low: 4,      high: 8}
+      l2_leaf_reg:                 {type: float,       low: 1.0,    high: 30.0,  log: true}
+      random_strength:             {type: float,       low: 0.01,   high: 10.0,  log: true}
+      subsample:                   {type: float,       low: 0.5,    high: 1.0}
+      rsm:                         {type: float,       low: 0.3,    high: 0.9}
+      min_data_in_leaf:            {type: int,         low: 10,     high: 200}
+      model_size_reg:              {type: float,       low: 0.0,    high: 10.0}
+      leaf_estimation_iterations:  {type: int,         low: 1,      high: 10}
+
+# --- Final-Model-Tuning (R-Score) ----------------------------
+# Optimiert das CATE-Effektmodell (Regressor) auf verrauschten Residuen/Pseudo-Outcomes.
+# BEWUSST konservativere Ranges als Nuisance: weniger Bäume, flacher, hoher min_leaf,
+# starke Regularisierung. Verhindert Overfitting auf Rausch-Muster im Pseudo-Target.
+final_model_tuning:
+  enabled: false
+  n_trials: 20
+  timeout_seconds: null
+  cv_splits: 3                            # Empfehlung: gleicher Wert wie data_processing.cross_validation_splits
+  method: rscorer
+  models: null                              # null = alle FMT-fähigen Modelle. Oder explizit: [NonParamDML, DRLearner]
+  single_fold: false                       # true = DRLearner nur 1 Fold/Trial (schneller). Oder explizit: [NonParamDML, DRLearner]
+  stability_penalty: 0.3                   # Bestraft instabile CATE-Schätzungen (hohe Streuung relativ zum Median).
+                                           # 0 = reiner R-Score. 0.3–0.5 = moderate Regularisierung.
+                                           # 1.0+ = starke Stabilität (CATEs werden konservativer, ähnlich CausalForestDML).
+  fixed_params: {}                         # Feste Hyperparameter für model_final (wenn Tuning deaktiviert)
+  search_space:
+    # --- LightGBM Final (Regressor) ---
+    # Flache Bäume, wenige Iterationen, hoher min_leaf/min_weight → konservative CATEs.
+    # Starke Feature-Subsampling (colsample ab 0.2) + hohe L1/L2 + path_smooth
+    # verhindern, dass der Learner Rausch-Korrelationen als Heterogenität interpretiert.
+    lgbm:
+      n_estimators:        {type: int,   low: 50,     high: 300}
+      learning_rate:       {type: float, low: 0.005,  high: 0.08,  log: true}
+      num_leaves:          {type: int,   low: 4,      high: 31}
+      max_depth:           {type: int,   low: 2,      high: 5}
+      min_child_samples:   {type: int,   low: 50,     high: 500}
+      min_child_weight:    {type: float, low: 1.0,    high: 100.0, log: true}
+      subsample:           {type: float, low: 0.4,    high: 0.8}
+      colsample_bytree:    {type: float, low: 0.2,    high: 0.6}
+      min_split_gain:      {type: float, low: 0.0,    high: 5.0}
+      reg_alpha:           {type: float, low: 0.1,    high: 50.0,  log: true}
+      reg_lambda:          {type: float, low: 1.0,    high: 100.0, log: true}
+      path_smooth:         {type: float, low: 0.0,    high: 50.0}
+    # --- CatBoost Final (Regressor) ---
+    # Gleiche Philosophie: wenige Iterationen, flach, starke L2 + model_size_reg.
+    # rsm ab 0.2 erzwingt aggressive Feature-Subsets pro Split.
+    catboost:
+      iterations:                  {type: int,         low: 50,     high: 300}
+      learning_rate:               {type: float,       low: 0.005,  high: 0.08,  log: true}
+      depth:                       {type: int,         low: 2,      high: 5}
+      l2_leaf_reg:                 {type: float,       low: 5.0,    high: 100.0, log: true}
+      random_strength:             {type: float,       low: 1.0,    high: 20.0,  log: true}
+      subsample:                   {type: float,       low: 0.4,    high: 0.8}
+      rsm:                         {type: float,       low: 0.2,    high: 0.6}
+      min_data_in_leaf:            {type: int,         low: 50,     high: 500}
+      model_size_reg:              {type: float,       low: 0.1,    high: 50.0,  log: true}
+      leaf_estimation_iterations:  {type: int,         low: 1,      high: 5}
+
+# --- Learner Data Usage ---------------------------------------
+learner_data_usage:
+  s_learner_frac: 1.0
+  t_learner_group_frac: 1.0
+  x_learner_group_frac: 1.0
+  dml_frac: 1.0
+  dr_learner_frac: 1.0
+
+# --- Explainability-Voreinstellungen -------------------------
+shap_values:
+  calculate_shap_values: false
+  shap_calculation_models: []
+  n_shap_values: 10000
+  top_n_features: 20
+  num_bins: 10
+
+# --- Segmentanalyse ------------------------------------------
+segment_analysis:
+  enabled: true
+  quantiles: 10
+  top_n_features: 8
+  max_bins: 6
+  max_categories: 15
+
+# --- Lokale Ausgaben ------------------------------------------
+optional_output:
+  output_dir: null
+  save_predictions: false
+  predictions_format: parquet
+  max_prediction_rows: null
+
+# --- Bundle-Export --------------------------------------------
+bundle:
+  enabled: true
+  base_dir: bundles
+  bundle_id: null
+  include_challengers: true
+  log_to_mlflow: true
+
+# --- Champion-Auswahl ----------------------------------------
+# Bei Binary Treatment: "qini", "auuc", "uplift_at_10pct", "uplift_at_20pct"
+#   oder "policy_value_treat_positive".
+# Bei Multi-Treatment: "policy_value" (empfohlen), "policy_value_treat_positive_T1",
+#   oder arm-spezifisch "qini_T1", "qini_T2", "auuc_T1", etc.
+# Hinweis: "qini" funktioniert bei Multi-Treatment nicht, da es keine
+#   einzelne Qini-Metrik gibt. rubin gibt in diesem Fall eine Warnung aus
+#   und fällt auf das erste Modell zurück.
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true
+  manual_champion: null
+
+# --- Surrogate-Einzelbaum (Teacher-Learner) -------------------
+# Ein einzelner Entscheidungsbaum, der die CATE-Vorhersagen des
+# Champion-Modells nachlernt. Wird für Kunden eingesetzt, die aus
+# regulatorischen Gründen nur mit einem interpretierbaren Modell
+# gescoret werden dürfen.
+surrogate_tree:
+  enabled: false                              # true zum Aktivieren
+  min_samples_leaf: 50                        # Mindestanzahl Samples pro Blatt
+  num_leaves: 31                              # Maximale Blattanzahl (LightGBM leaf-wise)
+  max_depth: null                             # null = keine Tiefenbegrenzung (lgbm: -1, catboost: 6)
