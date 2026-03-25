@@ -41,3 +41,6 @@ Backend nicht erreichbar: Unexpected token '<', "<!doctype "... is not valid JSO
 
 
 Excel file format cannot be determined, you must specify an engine manually.
+
+
+Backend nicht erreichbar: Unexpected token 'N', ..."L":{"max":NaN,"mean""... is not valid JSON. Prüfe die Verbindung in der Sidebar.
