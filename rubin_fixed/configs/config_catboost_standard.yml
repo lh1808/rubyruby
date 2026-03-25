@@ -1,0 +1,62 @@
+# ============================================================
+# CATBOOST STANDARD – CatBoost mit moderatem Tuning
+# ============================================================
+# CatBoost ist oft besonders stark bei kategorialen Features und
+# braucht weniger Feature-Engineering. Search Spaces sind
+# CatBoost-spezifisch optimiert.
+#
+#   python run_analysis.py --config configs/config_catboost_standard.yml --export-bundle
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_catboost
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+  dtypes_file: data/processed/dtypes.json
+
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+    - XLearner
+    - DRLearner
+    - NonParamDML
+
+base_learner:
+  type: catboost
+  fixed_params: {}
+
+tuning:
+  enabled: true
+  n_trials: 30
+  cv_splits: 5
+  optuna_seed: 42
+  search_space:
+    catboost:
+      iterations:                  {type: int,         low: 200,    high: 1500}
+      learning_rate:               {type: float,       low: 0.01,   high: 0.15,  log: true}
+      depth:                       {type: int,         low: 4,      high: 8}
+      l2_leaf_reg:                 {type: float,       low: 1.0,    high: 30.0,  log: true}
+      random_strength:             {type: float,       low: 0.01,   high: 10.0,  log: true}
+      subsample:                   {type: float,       low: 0.5,    high: 1.0}
+      rsm:                         {type: float,       low: 0.3,    high: 0.9}
+      min_data_in_leaf:            {type: int,         low: 10,     high: 200}
+      model_size_reg:              {type: float,       low: 0.0,    high: 10.0}
+      leaf_estimation_iterations:  {type: int,         low: 1,      high: 10}
+
+bundle:
+  enabled: true
+  base_dir: bundles
+  include_challengers: true
+  log_to_mlflow: true
+
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true

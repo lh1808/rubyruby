@@ -1,0 +1,92 @@
+# ============================================================
+# VOLLSTÄNDIGES BEISPIEL – End-to-End mit DataPrep
+# ============================================================
+# Zeigt den kompletten Workflow: DataPrep → Analyse → Bundle.
+# Pfadangaben an das eigene Projekt anpassen.
+#
+#   python run_dataprep.py --config configs/config_full_example.yml
+#   python run_analysis.py --config configs/config_full_example.yml --export-bundle
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_full_example
+
+constants:
+  SEED: 42
+
+data_prep:
+  data_path:
+    - data/raw/input.csv
+  feature_path: data/raw/feature_dictionary.xlsx
+  output_path: data/processed
+  delimiter: ","
+  chunksize: 300000
+  target: Y
+  treatment: T
+  target_replacement: {}
+  treatment_replacement: {}
+  binary_target: true
+  fill_na_method: median
+  log_to_mlflow: true
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+  dtypes_file: data/processed/dtypes.json
+
+data_processing:
+  cross_validation_splits: 5
+
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+    - XLearner
+    - DRLearner
+    - NonParamDML
+    - CausalForestDML
+
+base_learner:
+  type: lgbm
+  fixed_params: {}
+
+causal_forest:
+  forest_fixed_params:
+    n_jobs: -1
+  use_econml_tune: false
+
+tuning:
+  enabled: true
+  n_trials: 30
+  cv_splits: 5
+  optuna_seed: 42
+  search_space:
+    lgbm:
+      n_estimators:        {type: int,   low: 200,    high: 1000}
+      learning_rate:       {type: float, low: 0.01,   high: 0.15,  log: true}
+      num_leaves:          {type: int,   low: 15,     high: 127}
+      max_depth:           {type: int,   low: 3,      high: 8}
+      min_child_samples:   {type: int,   low: 10,     high: 200}
+      min_child_weight:    {type: float, low: 0.01,   high: 50.0,  log: true}
+      subsample:           {type: float, low: 0.5,    high: 1.0}
+      colsample_bytree:    {type: float, low: 0.3,    high: 0.9}
+      min_split_gain:      {type: float, low: 0.0,    high: 1.0}
+      reg_alpha:           {type: float, low: 1.0e-6, high: 20.0,  log: true}
+      reg_lambda:          {type: float, low: 1.0e-6, high: 20.0,  log: true}
+      path_smooth:         {type: float, low: 0.0,    high: 10.0}
+
+optional_output:
+  output_dir: runs/full_example
+  save_predictions: false
+
+bundle:
+  enabled: true
+  base_dir: bundles
+  include_challengers: true
+  log_to_mlflow: true
+
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true

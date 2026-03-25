@@ -1,0 +1,94 @@
+# ============================================================
+# CATBOOST INTENSIV – CatBoost mit gründlichem Tuning
+# ============================================================
+# Analog zu lgbm_intensiv, aber mit CatBoost. Final-Model-Tuning
+# aktiviert, persistente Studies. CatBoost-spezifische Ranges.
+#
+#   python run_analysis.py --config configs/config_catboost_intensiv.yml --export-bundle
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_catboost_intensiv
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+  dtypes_file: data/processed/dtypes.json
+
+data_processing:
+  cross_validation_splits: 5
+
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+    - XLearner
+    - DRLearner
+    - NonParamDML
+    - ParamDML
+
+base_learner:
+  type: catboost
+  fixed_params: {}
+
+# --- Nuisance-Tuning: CatBoost Classifier ---------------------
+tuning:
+  enabled: true
+  n_trials: 80
+  cv_splits: 5
+  storage_path: runs/optuna_studies/catboost_intensiv.db
+  reuse_study_if_exists: true
+  optuna_seed: 42
+  search_space:
+    catboost:
+      iterations:                  {type: int,         low: 200,    high: 1500}
+      learning_rate:               {type: float,       low: 0.01,   high: 0.15,  log: true}
+      depth:                       {type: int,         low: 4,      high: 8}
+      l2_leaf_reg:                 {type: float,       low: 1.0,    high: 30.0,  log: true}
+      random_strength:             {type: float,       low: 0.01,   high: 10.0,  log: true}
+      subsample:                   {type: float,       low: 0.5,    high: 1.0}
+      rsm:                         {type: float,       low: 0.3,    high: 0.9}
+      min_data_in_leaf:            {type: int,         low: 10,     high: 200}
+      model_size_reg:              {type: float,       low: 0.0,    high: 10.0}
+      leaf_estimation_iterations:  {type: int,         low: 1,      high: 10}
+
+# --- Final-Model-Tuning: CatBoost Regressor -------------------
+# Engere Ranges, stärkere Regularisierung, weniger Iterationen.
+final_model_tuning:
+  enabled: true
+  n_trials: 40
+  cv_splits: 5
+  search_space:
+    catboost:
+      iterations:                  {type: int,         low: 50,     high: 300}
+      learning_rate:               {type: float,       low: 0.005,  high: 0.08,  log: true}
+      depth:                       {type: int,         low: 2,      high: 5}
+      l2_leaf_reg:                 {type: float,       low: 5.0,    high: 100.0, log: true}
+      random_strength:             {type: float,       low: 1.0,    high: 20.0,  log: true}
+      subsample:                   {type: float,       low: 0.4,    high: 0.8}
+      rsm:                         {type: float,       low: 0.2,    high: 0.6}
+      min_data_in_leaf:            {type: int,         low: 50,     high: 500}
+      model_size_reg:              {type: float,       low: 0.1,    high: 50.0,  log: true}
+      leaf_estimation_iterations:  {type: int,         low: 1,      high: 5}
+
+  models: [NonParamDML, DRLearner]
+  single_fold: true
+optional_output:
+  output_dir: runs/catboost_intensiv
+  save_predictions: true
+  predictions_format: parquet
+
+bundle:
+  enabled: true
+  base_dir: bundles
+  include_challengers: true
+  log_to_mlflow: true
+
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true
