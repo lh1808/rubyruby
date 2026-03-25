@@ -1,0 +1,2 @@
+Ich kann in der Datenvorbereitung die Felder von Treatment-Spalte, Target-Spalte etc. nicht mehr manuell anpassen. Schau bitte, wo es da überall Probleme gibt und behebe diese.
+Zusätzlich wird nun zwar mein Feature Dictionary erkannt, jedoch gibt es keinen Button mit dem ich dessen Ausführung und die Reduktion der Spalten und Anpassung der Datentypen vornehmen kann. Integriere das bitte und verknüpfe immer alles mit dem Backend.
