@@ -1,0 +1,62 @@
+# ============================================================
+# rubin – Causal ML Framework
+# ============================================================
+# Pixi-Konfiguration: siehe pixi.toml (separate Datei, wie HF2)
+# Pip-Fallback:       pip install -e ".[shap,dev]"
+# ============================================================
+
+[project]
+name = "rubin"
+version = "1.0.0"
+description = "Causal ML Framework – Analyse- und Production-Pipelines"
+requires-python = ">= 3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "rubin Team" }]
+readme = "README.md"
+
+# ── Standard-Dependencies (für pip install -e . Kompatibilität) ──
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "pydantic>=2.0",
+    "scikit-learn>=1.3",
+    "mlflow>=2.10",
+    "optuna>=3.5",
+    "matplotlib>=3.7",
+    "scipy>=1.11",
+    "lightgbm>=4.0",
+    "catboost>=1.2",
+    "econml>=0.15",
+    "pyarrow>=12",
+    "pyyaml>=6.0",
+    "scikit-uplift>=0.5",
+]
+
+[project.optional-dependencies]
+shap = ["shap>=0.43"]
+app = ["flask>=3.0", "pandas>=2.0", "pyarrow>=12", "pyyaml>=6.0", "scikit-uplift>=0.5"]
+dev = ["pytest>=7.4", "pytest-cov>=4.1", "ruff>=0.3"]
+
+[build-system]
+requires = ["setuptools", "setuptools-scm", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["rubin", "rubin.*", "app"]
+namespaces = false
+
+# ============================================================
+# TOOL CONFIGURATION
+# ============================================================
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]  # Line length wird per line-length gesteuert
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

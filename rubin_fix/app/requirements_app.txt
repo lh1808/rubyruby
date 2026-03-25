@@ -1,0 +1,9 @@
+# ────────────────────────────────────────────────────
+# rubin App-Abhaengigkeiten (fuer pip-Fallback)
+# ────────────────────────────────────────────────────
+
+flask>=3.0
+pandas>=2.0
+pyarrow>=12.0
+pyyaml>=6.0
+scikit-uplift>=0.5
