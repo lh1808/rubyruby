@@ -37,3 +37,7 @@ Traceback (most recent call last):
 TypeError: FinalModelTuner.tune_final_model() missing 1 required positional argument: 'fmt_fixed_params'
 
 Backend nicht erreichbar: Unexpected token '<', "<!doctype "... is not valid JSON
+
+
+
+Excel file format cannot be determined, you must specify an engine manually.
