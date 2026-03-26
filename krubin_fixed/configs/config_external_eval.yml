@@ -1,0 +1,51 @@
+# ────────────────────────────────────────────────────
+# rubin – External Evaluation
+# Training auf einem Datensatz, Evaluation auf einem separaten.
+# Anwendungsfälle:
+#   - Train auf historischen Daten, Eval auf aktuellem Monat
+#   - Train auf mehreren Dateien (via DataPrep merged), Eval auf Holdout-Datei
+#   - Train/Eval-Split wurde extern vorbereitet
+# ────────────────────────────────────────────────────
+
+mlflow:
+  experiment_name: rubin_external_eval
+
+constants:
+  SEED: 42
+
+data_files:
+  # Trainingsdaten (können via DataPrep aus mehreren Dateien zusammengeführt sein)
+  x_file: data/processed/X_train.parquet
+  t_file: data/processed/T_train.parquet
+  y_file: data/processed/Y_train.parquet
+  # Evaluationsdaten (separater Datensatz)
+  eval_x_file: data/processed/X_eval.parquet
+  eval_t_file: data/processed/T_eval.parquet
+  eval_y_file: data/processed/Y_eval.parquet
+
+data_processing:
+  validate_on: external
+  cross_validation_splits: 5
+  reduce_memory: true
+
+treatment:
+  type: binary
+  reference_group: 0
+
+models:
+  models_to_train: [NonParamDML, DRLearner, SLearner, TLearner]
+
+base_learner:
+  type: lgbm
+
+tuning:
+  enabled: true
+  n_trials: 30
+
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true
+
+bundle:
+  enabled: true
