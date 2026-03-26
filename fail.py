@@ -1,17 +1,12 @@
-○
-HTML-Report
-Pipeline-Logs
-132 Zeilen
-Ausblenden
 [rubin] Step 1/8: Daten laden & Preprocessing
 [rubin] Step 2/8: Feature-Selektion
 [rubin] Step 3/8: Base-Learner-Tuning
 [rubin] Step 4/8: Training & Cross-Predictions
 [rubin] Step 5/8: Evaluation & Metriken
-16:07:00 INFO [rubin.analysis] [rubin] Step 1/8: Daten laden & Preprocessing
-16:07:00 INFO [rubin.analysis] Historischer Score: 5 NaN-Werte durch 0 ersetzt.
-16:07:02 INFO [rubin.analysis] Memory-Reduktion: 1085.7 MB → 826.8 MB (24% gespart).
-16:07:02 INFO [rubin.analysis] Daten geladen: X=(389988, 696), T=(389988,) (unique=[0, 1]), Y=(389988,) (unique=[0, 1]), S=(389988,)
+[rubin] Step 6/8: Surrogate-Tree
+[rubin] Step 7/8: Bundle-Export
+[rubin] Step 8/8: HTML-Report
+[rubin] Step 8/8: Fertig
 16:07:02 INFO [rubin.analysis] [rubin] Step 2/8: Feature-Selektion
 16:07:03 INFO [rubin.feature_selection] Feature-Selektion: 2 Methoden sequentiell (alle Kerne pro Methode).
 16:11:20 INFO [rubin.feature_selection] CausalForest FS: X=(389988, 696) (dtypes: 696 numeric, 0 category), T=(389988,) (unique=2), Y=(389988,), n_jobs=-1, in_thread=False
@@ -135,156 +130,30 @@ Ausblenden
 16:50:02 INFO [rubin.training] CausalForestDML: 5 Folds sequentiell.
 16:56:44 INFO [rubin.analysis] Predictions_CausalForestDML: CATE min=-0.00547924, median=0.000720607, max=0.00860707, std=0.000398421, unique=389444/389988, non-zero=389988/389988
 16:56:44 INFO [rubin.analysis] [rubin] Step 5/8: Evaluation & Metriken
-
-
-[rubin] Step 1/8: Daten laden & Preprocessing
-[rubin] Step 2/8: Feature-Selektion
-[rubin] Step 3/8: Base-Learner-Tuning
-[rubin] Step 4/8: Training & Cross-Predictions
-[rubin] Step 5/8: Evaluation & Metriken
-[rubin] Step 6/8: Surrogate-Tree
-[rubin] Step 7/8: Bundle-Export
-[rubin] Step 8/8: HTML-Report
-[rubin] Step 8/8: Fertig
-07:12:15 INFO [rubin.analysis] [rubin] Step 1/8: Daten laden & Preprocessing
-07:12:17 INFO [rubin.analysis] Memory-Reduktion: 1316.5 MB → 1002.5 MB (24% gespart).
-07:12:17 INFO [rubin.analysis] Daten geladen: X=(472875, 696), T=(472875,) (unique=[0, 1]), Y=(472875,) (unique=[0, 1]), S=(472875,)
-07:12:18 INFO [rubin.analysis] [rubin] Step 2/8: Feature-Selektion
-07:12:18 INFO [rubin.feature_selection] Feature-Selektion: 2 Methoden sequentiell (alle Kerne pro Methode).
-07:16:23 INFO [rubin.feature_selection] CausalForest FS: X=(472875, 696) (dtypes: 696 numeric, 0 category), T=(472875,) (unique=2), Y=(472875,), n_jobs=-1, in_thread=False
-07:16:25 INFO [rubin.feature_selection] CausalForest FS: Subsampling 472875 → 99999 Zeilen (stratifiziert nach T).
-07:16:25 INFO [rubin.feature_selection] CausalForest FS: fit(99999×696, T unique=2, n_estimators=100, n_jobs=-1)...
-07:16:53 INFO [rubin.feature_selection] Feature-Selection 'lgbm_importance': Top-15% = 105 / 696 Features.
-07:16:53 INFO [rubin.feature_selection] Feature-Selection 'causal_forest': Top-15% = 105 / 696 Features.
-07:16:53 INFO [rubin.feature_selection] Feature-Selection Union: 153 / 696 Features behalten, 543 entfernt.
-07:18:10 INFO [rubin.analysis] [rubin] Step 3/8: Base-Learner-Tuning
-07:18:10 INFO [rubin.analysis] Starte Tuning: X=(472875, 129), Y=(472875,) (unique=[0, 1]), T=(472875,) (unique=[0, 1])
-07:18:10 INFO [rubin.tuning] tune_all gestartet: models=['TLearner', 'DRLearner', 'NonParamDML', 'CausalForestDML'], X=(472875, 129), Y=(472875,) (unique=[0, 1]), T=(472875,) (unique=[0, 1]), cv_splits=5, n_trials=80, parallel_trials=16
-07:18:11 INFO [rubin.tuning] Tuning-Task 'catboost__outcome__classifier__all__no_t__y': X_input=472875 rows, indices=472875, X_task=(472875, 129), target=(472875,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=outcome
-07:22:26 INFO [rubin.tuning] Tuning-Task 'catboost__outcome_regression__regressor__all__no_t__y': X_input=472875 rows, indices=472875, X_task=(472875, 129), target=(472875,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=outcome_regression
-07:25:04 INFO [rubin.tuning] Tuning-Task 'catboost__grouped_outcome_regression__regressor__group_specific_shared_params__no_t__y': X_input=472875 rows, indices=389998, X_task=(389998, 129), target=(389998,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=grouped_outcome_regression
-07:27:34 INFO [rubin.tuning] Tuning-Task 'catboost__propensity__classifier__all__no_t__t': X_input=472875 rows, indices=472875, X_task=(472875, 129), target=(472875,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=T, objective=propensity
-07:52:33 INFO [rubin.analysis] [rubin] Step 4/8: Training & Cross-Predictions
-07:52:34 INFO [rubin.training] TLearner: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
-07:52:59 INFO [rubin.analysis] Predictions_TLearner: CATE min=-0.362981, median=0.000753776, max=0.253531, std=0.00260195, unique=472272/472875, non-zero=472875/472875
-07:52:59 INFO [rubin.analysis] DRLearner model_final effektive Params: {'iterations': 50, 'min_data_in_leaf': 295} (explicit_tuned=ja, fmt_fixed=False)
-07:52:59 INFO [rubin.training] DRLearner: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
-07:56:34 INFO [rubin.analysis] Predictions_DRLearner: CATE min=-1.13981, median=0.000674828, max=0.581783, std=0.006639, unique=461702/472875, non-zero=472875/472875
-07:56:34 INFO [rubin.analysis] NonParamDML model_final effektive Params: {'iterations': 50, 'min_data_in_leaf': 366} (explicit_tuned=ja, fmt_fixed=False)
-07:56:35 INFO [rubin.training] NonParamDML: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
-08:01:14 INFO [rubin.analysis] Predictions_NonParamDML: CATE min=-0.715154, median=0.000663523, max=1.13144, std=0.00649879, unique=448886/472875, non-zero=472875/472875
-08:08:10 INFO [rubin.training] CausalForestDML: Erzwinge sequentielle Folds (GRF nutzt intern joblib-Prozesse, die in Threads zu Deadlocks führen).
-08:08:10 INFO [rubin.training] CausalForestDML: 5 Folds sequentiell.
-08:23:12 INFO [rubin.analysis] Predictions_CausalForestDML: CATE min=-0.000455436, median=0.000761368, max=0.00271738, std=0.000404139, unique=472272/472875, non-zero=472875/472875
-08:23:12 INFO [rubin.analysis] [rubin] Step 5/8: Evaluation & Metriken
-08:23:38 INFO [rubin.analysis] DRTester Nuisance einmalig gefittet (BT, cv=3, n_est≤100). Wird für alle Modelle wiederverwendet.
-08:23:38 INFO [rubin.analysis] Evaluation Predictions_TLearner: n=472875, min=-0.362981, median=0.000753776, max=0.253531, std=0.00260195, non-zero=472875/472875, unique=999
-08:23:39 INFO [rubin.analysis] Evaluation Predictions_DRLearner: n=472875, min=-1.13981, median=0.000674828, max=0.581783, std=0.006639, non-zero=472875/472875, unique=999
-08:23:40 INFO [rubin.analysis] Evaluation Predictions_NonParamDML: n=472875, min=-0.715154, median=0.000663523, max=1.13144, std=0.00649879, non-zero=472875/472875, unique=999
-08:23:40 INFO [rubin.analysis] Evaluation Predictions_CausalForestDML: n=472875, min=-0.000455436, median=0.000761368, max=0.00271738, std=0.000404139, non-zero=472875/472875, unique=999
-08:23:41 INFO [rubin.analysis] Metriken für 4 Modelle berechnet. Vorläufiger Champion: CausalForestDML. Diagnostik-Plots: Champion + Challenger
-08:55:22 WARNING [rubin.evaluation.drtester_plots] DRTester evaluate_all fehlgeschlagen: exog contains inf or nans
+17:39:16 INFO [rubin.analysis] DRTester Nuisance einmalig gefittet (BT, cv=3, n_est≤100). Wird für alle Modelle wiederverwendet.
+17:39:16 INFO [rubin.analysis] Evaluation Predictions_XLearner: n=389988, min=-0.0362055, median=0.000625949, max=0.0409281, std=0.00137388, non-zero=389988/389988, unique=999
+17:39:16 INFO [rubin.analysis] Evaluation Predictions_DRLearner: n=389988, min=0.000827544, median=0.00084219, max=0.000850949, std=8.14947e-06, non-zero=389988/389988, unique=5
+17:39:17 INFO [rubin.analysis] Evaluation Predictions_NonParamDML: n=389988, min=0.000817894, median=0.000829547, max=0.000834671, std=6.78026e-06, non-zero=389988/389988, unique=5
+17:39:18 INFO [rubin.analysis] Evaluation Predictions_TLearner: n=389988, min=-0.0565335, median=0.000499056, max=0.0484579, std=0.00243547, non-zero=389988/389988, unique=999
+17:39:18 INFO [rubin.analysis] Evaluation Predictions_CausalForestDML: n=389988, min=-0.00547924, median=0.000720607, max=0.00860707, std=0.000398421, non-zero=389988/389988, unique=999
+17:39:19 INFO [rubin.analysis] Metriken für 5 Modelle berechnet. Vorläufiger Champion: TLearner. Diagnostik-Plots: Champion + Challenger
+18:05:17 INFO [rubin.analysis] [rubin] Step 6/8: Surrogate-Tree
+18:05:17 INFO [rubin.analysis] Trainiere Surrogate auf CausalForestDML (immer, unabhängig von Champion).
+18:05:17 INFO [rubin.analysis] CausalForestDML Rang: 3 → DRTester-Plots: nein
+18:05:17 WARNING [rubin.analysis] SurrogateTree_CausalForestDML fehlgeschlagen.
 Traceback (most recent call last):
-  File "/mnt/rubin/rubin/evaluation/drtester_plots.py", line 644, in evaluate_cate_with_plots
-    res = tester.evaluate_all(X_val.values, X_train.values if X_train is not None else None, n_groups=n_groups, n_bootstrap=n_bootstrap)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/rubin/evaluation/drtester_plots.py", line 269, in evaluate_all
-    blp_res = self.evaluate_blp()
-              ^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/econml/validate/drtester.py", line 482, in evaluate_blp
-    reg = OLS(self.dr_val_, add_constant(self.cate_preds_val_)).fit()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 921, in __init__
-    super().__init__(endog, exog, missing=missing,
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 746, in __init__
-    super().__init__(endog, exog, missing=missing,
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 200, in __init__
-    super().__init__(endog, exog, **kwargs)
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 270, in __init__
-    super().__init__(endog, exog, **kwargs)
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 95, in __init__
-    self.data = self._handle_data(endog, exog, missing, hasconst,
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 135, in _handle_data
-    data = handle_data(endog, exog, missing, hasconst, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 694, in handle_data
-    return klass(endog, exog=exog, missing=missing, hasconst=hasconst, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 90, in __init__
-    self._handle_constant(hasconst)
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 139, in _handle_constant
-    raise MissingDataError("exog contains inf or nans")
-statsmodels.tools.sm_exceptions.MissingDataError: exog contains inf or nans
-09:05:02 WARNING [rubin.analysis] DRTester/SkLift-Plots für historischen Score fehlgeschlagen.
-Traceback (most recent call last):
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 1133, in _evaluate_historical_score
-    _log_temp_artifact(mlflow, lambda p, _b=bundle_h: save_dataframe_as_png(_b.summary, p), f"summary__{hist_name}.png")
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 88, in _log_temp_artifact
-    content_fn(path)
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 1133, in <lambda>
-    _log_temp_artifact(mlflow, lambda p, _b=bundle_h: save_dataframe_as_png(_b.summary, p), f"summary__{hist_name}.png")
-                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/rubin/evaluation/drtester_plots.py", line 96, in save_dataframe_as_png
-    tbl = table(ax, df, loc="center", cellLoc="center", colWidths=[0.1] * len(df.columns))
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/plotting/_misc.py", line 62, in table
-    return plot_backend.table(
-           ^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/plotting/_matplotlib/tools.py", line 83, in table
-    return matplotlib.table.table(
-           ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/matplotlib/table.py", line 761, in table
-    cols = len(cellText[0])
-               ~~~~~~~~^^^
-IndexError: index 0 is out of bounds for axis 0 with size 0
-09:05:02 WARNING [rubin.analysis] Policy-Value-Vergleich fehlgeschlagen.
-Traceback (most recent call last):
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 1178, in _evaluate_historical_score
-    figs = policy_value_comparison_plots(policy_values_dict, comparison_model_name=hist_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/rubin/evaluation/drtester_plots.py", line 850, in policy_value_comparison_plots
-    ref_values = ref["policy_value"]
-                 ~~~^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/core/frame.py", line 4113, in __getitem__
-    indexer = self.columns.get_loc(key)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/core/indexes/range.py", line 417, in get_loc
-    raise KeyError(key)
-KeyError: 'policy_value'
-09:05:03 INFO [rubin.analysis] [rubin] Step 6/8: Surrogate-Tree
-09:05:06 INFO [rubin.analysis] Surrogate-Evaluation: {'qini': 0.00022390792849648504, 'auuc': 0.0007465267284536511, 'uplift_at_10pct': 0.00023851643273150967, 'uplift_at_20pct': 0.00044080402691202647, 'uplift_at_50pct': 0.0008635323716823421, 'policy_value_treat_positive': 0.0010452375999190067}
-09:13:48 INFO [rubin.analysis] RAM-Optimierung: gc.collect() nach Surrogate.
-09:13:48 INFO [rubin.analysis] [rubin] Step 7/8: Bundle-Export
-09:20:36 INFO [rubin.analysis] Surrogate-Einzelbaum exportiert (Typ=catboost, Tiefe=6, Blätter=64, trainiert auf 472875 Zeilen).
-09:20:36 INFO [rubin.analysis] RAM-Optimierung: Modelle, Predictions und X_full freigegeben.
-09:20:36 INFO [rubin.analysis] [rubin] Step 8/8: HTML-Report
-09:20:36 INFO [rubin.reporting] HTML-Report geschrieben: output/analysis_report.html
-
-
-              ^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/econml/validate/drtester.py", line 482, in evaluate_blp
-    reg = OLS(self.dr_val_, add_constant(self.cate_preds_val_)).fit()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 921, in __init__
-    super().__init__(endog, exog, missing=missing,
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 746, in __init__
-    super().__init__(endog, exog, missing=missing,
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 200, in __init__
-    super().__init__(endog, exog, **kwargs)
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 270, in __init__
-    super().__init__(endog, exog, **kwargs)
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 95, in __init__
-    self.data = self._handle_data(endog, exog, missing, hasconst,
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 135, in _handle_data
-    data = handle_data(endog, exog, missing, hasconst, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 694, in handle_data
-    return klass(endog, exog=exog, missing=missing, hasconst=hasconst, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 90, in __init__
-    self._handle_constant(hasconst)
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 139, in _handle_constant
-    raise MissingDataError("exog contains inf or nans")
-statsmodels.tools.sm_exceptions.MissingDataError: exog contains inf or nans
+  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 2170, in run
+    fitted_tester=fitted_tester_bt,
+                  ^^^^^^^^^^^^^^^^
+NameError: name 'fitted_tester_bt' is not defined
+18:05:17 INFO [rubin.analysis] Trainiere Surrogate auf Champion TLearner.
+18:05:43 INFO [rubin.analysis] Surrogate-Evaluation: {'qini': 0.00034930760793360887, 'auuc': 0.0007775453479073333, 'uplift_at_10pct': 0.00048318486772785333, 'uplift_at_20pct': 0.0006370808417097568, 'uplift_at_50pct': 0.0008523636600969063, 'policy_value_treat_positive': 0.0009617831432560263}
+18:14:21 INFO [rubin.analysis] RAM-Optimierung: gc.collect() nach Surrogate.
+18:14:21 INFO [rubin.analysis] [rubin] Step 7/8: Bundle-Export
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+18:17:56 INFO [rubin.analysis] Surrogate-Einzelbaum exportiert (Typ=lgbm, Tiefe=None, Blätter=31, trainiert auf 389988 Zeilen).
+18:17:56 INFO [rubin.analysis] RAM-Optimierung: Modelle, Predictions und X_full freigegeben.
+18:17:56 INFO [rubin.analysis] [rubin] Step 8/8: HTML-Report
+18:17:56 INFO [rubin.reporting] HTML-Report geschrieben: /mnt/rubin/.rubin_cache/analysis_report.html
+18:17:56 INFO [rubin.analysis] HTML-Report geschrieben: /mnt/rubin/.rubin_cache/analysis_report.html
