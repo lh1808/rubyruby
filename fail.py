@@ -172,3 +172,31 @@ KeyError: 'policy_value'
 09:20:36 INFO [rubin.analysis] RAM-Optimierung: Modelle, Predictions und X_full freigegeben.
 09:20:36 INFO [rubin.analysis] [rubin] Step 8/8: HTML-Report
 09:20:36 INFO [rubin.reporting] HTML-Report geschrieben: output/analysis_report.html
+
+
+              ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/econml/validate/drtester.py", line 482, in evaluate_blp
+    reg = OLS(self.dr_val_, add_constant(self.cate_preds_val_)).fit()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 921, in __init__
+    super().__init__(endog, exog, missing=missing,
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 746, in __init__
+    super().__init__(endog, exog, missing=missing,
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/regression/linear_model.py", line 200, in __init__
+    super().__init__(endog, exog, **kwargs)
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 270, in __init__
+    super().__init__(endog, exog, **kwargs)
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 95, in __init__
+    self.data = self._handle_data(endog, exog, missing, hasconst,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/model.py", line 135, in _handle_data
+    data = handle_data(endog, exog, missing, hasconst, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 694, in handle_data
+    return klass(endog, exog=exog, missing=missing, hasconst=hasconst, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 90, in __init__
+    self._handle_constant(hasconst)
+  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/statsmodels/base/data.py", line 139, in _handle_constant
+    raise MissingDataError("exog contains inf or nans")
+statsmodels.tools.sm_exceptions.MissingDataError: exog contains inf or nans
