@@ -1,52 +1,140 @@
-Ich kann in der Datenvorbereitung die Felder von Treatment-Spalte, Target-Spalte etc. nicht mehr manuell anpassen. Schau bitte, wo es da überall Probleme gibt und behebe diese.
-Zusätzlich wird nun zwar mein Feature Dictionary erkannt, jedoch gibt es keinen Button mit dem ich dessen Ausführung und die Reduktion der Spalten und Anpassung der Datentypen vornehmen kann. Integriere das bitte und verknüpfe immer alles mit dem Backend.
-
-
-Analyse fehlgeschlagen: Fehlgeschlagen (Exit 1)
-
-Details:
-15:09:36 INFO [rubin.analysis] [rubin] Step 1/8: Daten laden & Preprocessing
-15:10:02 INFO [rubin.analysis] Memory-Reduktion: 2124.2 MB → 292.1 MB (86% gespart).
-15:10:02 INFO [rubin.analysis] Daten geladen: X=(435995, 608), T=(435995,) (unique=[0, 1]), Y=(435995,) (unique=[0, 1]), S=None
-15:10:03 INFO [rubin.analysis] [rubin] Step 2/8: Feature-Selektion
-15:10:03 INFO [rubin.feature_selection] Feature-Selektion: 2 Methoden sequentiell (alle Kerne pro Methode).
-15:13:53 INFO [rubin.feature_selection] CausalForest FS: X=(435995, 608) (dtypes: 608 numeric, 0 category), T=(435995,) (unique=2), Y=(435995,), n_jobs=-1, in_thread=False
-15:13:54 INFO [rubin.feature_selection] CausalForest FS: Subsampling 435995 → 99999 Zeilen (stratifiziert nach T).
-15:13:54 INFO [rubin.feature_selection] CausalForest FS: fit(99999×608, T unique=2, n_estimators=100, n_jobs=-1)...
-15:14:19 INFO [rubin.feature_selection] Feature-Selection 'lgbm_importance': Top-15% = 92 / 608 Features.
-15:14:19 INFO [rubin.feature_selection] Feature-Selection 'causal_forest': Top-15% = 92 / 608 Features.
-15:14:19 INFO [rubin.feature_selection] Feature-Selection Union: 132 / 608 Features behalten, 476 entfernt.
-15:15:13 INFO [rubin.analysis] [rubin] Step 3/8: Base-Learner-Tuning
-15:15:13 INFO [rubin.analysis] Starte Tuning: X=(435995, 116), Y=(435995,) (unique=[0, 1]), T=(435995,) (unique=[0, 1])
-15:15:13 INFO [rubin.tuning] tune_all gestartet: models=['TLearner', 'DRLearner', 'NonParamDML', 'CausalForestDML'], X=(435995, 116), Y=(435995,) (unique=[0, 1]), T=(435995,) (unique=[0, 1]), cv_splits=5, n_trials=80, parallel_trials=16
-15:15:13 INFO [rubin.tuning] Tuning-Task 'catboost__outcome__classifier__all__no_t__y': X_input=435995 rows, indices=435995, X_task=(435995, 116), target=(435995,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=outcome
-15:24:22 INFO [rubin.tuning] Tuning-Task 'catboost__outcome_regression__regressor__all__no_t__y': X_input=435995 rows, indices=435995, X_task=(435995, 116), target=(435995,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=outcome_regression
-15:30:01 INFO [rubin.tuning] Tuning-Task 'catboost__grouped_outcome_regression__regressor__group_specific_shared_params__no_t__y': X_input=435995 rows, indices=435990, X_task=(435990, 116), target=(435990,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=grouped_outcome_regression
-15:34:41 INFO [rubin.tuning] Tuning-Task 'catboost__propensity__classifier__all__no_t__t': X_input=435995 rows, indices=435995, X_task=(435995, 116), target=(435995,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=T, objective=propensity
-Traceback (most recent call last):
-  File "/mnt/rubin/run_analysis.py", line 117, in <module>
-    main()
-  File "/mnt/rubin/run_analysis.py", line 113, in main
-    pipe.run(export_bundle=args.export_bundle, bundle_dir=args.bundle_dir, bundle_id=args.bundle_id)
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 1826, in run
-    tuned_params_by_model = self._run_tuning(cfg, X, T, Y, mlflow)
-                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 333, in _run_tuning
-    add = final_tuner.tune_final_model(
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: FinalModelTuner.tune_final_model() missing 1 required positional argument: 'fmt_fixed_params'
-
-Backend nicht erreichbar: Unexpected token '<', "<!doctype "... is not valid JSON
-
-
-
-Excel file format cannot be determined, you must specify an engine manually.
-
-
-Backend nicht erreichbar: Unexpected token 'N', ..."L":{"max":NaN,"mean""... is not valid JSON. Prüfe die Verbindung in der Sidebar.
-
-
-Missing optional dependency 'openpyxl'. Use pip or conda to install openpyxl.
+○
+HTML-Report
+Pipeline-Logs
+132 Zeilen
+Ausblenden
+[rubin] Step 1/8: Daten laden & Preprocessing
+[rubin] Step 2/8: Feature-Selektion
+[rubin] Step 3/8: Base-Learner-Tuning
+[rubin] Step 4/8: Training & Cross-Predictions
+[rubin] Step 5/8: Evaluation & Metriken
+16:07:00 INFO [rubin.analysis] [rubin] Step 1/8: Daten laden & Preprocessing
+16:07:00 INFO [rubin.analysis] Historischer Score: 5 NaN-Werte durch 0 ersetzt.
+16:07:02 INFO [rubin.analysis] Memory-Reduktion: 1085.7 MB → 826.8 MB (24% gespart).
+16:07:02 INFO [rubin.analysis] Daten geladen: X=(389988, 696), T=(389988,) (unique=[0, 1]), Y=(389988,) (unique=[0, 1]), S=(389988,)
+16:07:02 INFO [rubin.analysis] [rubin] Step 2/8: Feature-Selektion
+16:07:03 INFO [rubin.feature_selection] Feature-Selektion: 2 Methoden sequentiell (alle Kerne pro Methode).
+16:11:20 INFO [rubin.feature_selection] CausalForest FS: X=(389988, 696) (dtypes: 696 numeric, 0 category), T=(389988,) (unique=2), Y=(389988,), n_jobs=-1, in_thread=False
+16:11:21 INFO [rubin.feature_selection] CausalForest FS: Subsampling 389988 → 99999 Zeilen (stratifiziert nach T).
+16:11:21 INFO [rubin.feature_selection] CausalForest FS: fit(99999×696, T unique=2, n_estimators=100, n_jobs=-1)...
+16:11:51 INFO [rubin.feature_selection] Feature-Selection 'lgbm_importance': Top-15% = 105 / 696 Features.
+16:11:51 INFO [rubin.feature_selection] Feature-Selection 'causal_forest': Top-15% = 105 / 696 Features.
+16:11:51 INFO [rubin.feature_selection] Feature-Selection Union: 152 / 696 Features behalten, 544 entfernt.
+16:12:54 INFO [rubin.analysis] [rubin] Step 3/8: Base-Learner-Tuning
+16:12:54 INFO [rubin.analysis] Starte Tuning: X=(389988, 124), Y=(389988,) (unique=[0, 1]), T=(389988,) (unique=[0, 1])
+16:12:54 INFO [rubin.tuning] tune_all gestartet: models=['XLearner', 'DRLearner', 'NonParamDML', 'TLearner', 'CausalForestDML'], X=(389988, 124), Y=(389988,) (unique=[0, 1]), T=(389988,) (unique=[0, 1]), cv_splits=5, n_trials=80, parallel_trials=16
+16:12:54 INFO [rubin.tuning] Tuning-Task 'lgbm__outcome__classifier__all__no_t__y': X_input=389988 rows, indices=389988, X_task=(389988, 124), target=(389988,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=outcome
+16:14:11 INFO [rubin.tuning] Tuning-Task 'lgbm__outcome_regression__regressor__all__no_t__y': X_input=389988 rows, indices=389988, X_task=(389988, 124), target=(389988,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=outcome_regression
+16:15:05 INFO [rubin.tuning] Tuning-Task 'lgbm__grouped_outcome_regression__regressor__group_specific_shared_params__no_t__y': X_input=389988 rows, indices=389984, X_task=(389984, 124), target=(389984,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=Y, objective=grouped_outcome_regression
+16:16:39 INFO [rubin.tuning] Tuning-Task 'lgbm__propensity__classifier__all__no_t__t': X_input=389988 rows, indices=389988, X_task=(389988, 124), target=(389988,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=T, objective=propensity
+16:18:01 INFO [rubin.tuning] Tuning-Task 'lgbm__pseudo_effect__regressor__group_specific_shared_params__no_t__d': X_input=389988 rows, indices=389984, X_task=(389984, 124), target=(389984,) (unique=[0, 1]), T_task unique=[0, 1], cv_splits=5, target_name=D, objective=pseudo_effect
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+16:39:53 INFO [rubin.analysis] [rubin] Step 4/8: Training & Cross-Predictions
+16:39:53 INFO [rubin.training] XLearner: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
+16:40:46 INFO [rubin.analysis] Predictions_XLearner: CATE min=-0.0362055, median=0.000625949, max=0.0409281, std=0.00137388, unique=389431/389988, non-zero=389988/389988
+16:40:46 INFO [rubin.analysis] DRLearner model_final effektive Params: {'n_estimators': 54, 'num_leaves': 21, 'max_depth': 2, 'min_child_samples': 303, 'min_child_weight': 3.07633272350389, 'colsample_bytree': 0.26842441331437217, 'reg_alpha': 1.0480719959544251, 'reg_lambda': 13.14811096117303, 'path_smooth': 21.6490543411484} (explicit_tuned=ja, fmt_fixed=False)
+16:40:47 INFO [rubin.training] DRLearner: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
+16:43:09 WARNING [rubin.analysis] WARNUNG: Predictions_DRLearner hat nur 5 distinkte Werte bei 5 Folds (Range=2.34e-05, Mean=8.41e-04). Das CATE-Modell ist wahrscheinlich zu einem Intercept kollabiert. Empfehlungen: (1) final_model_tuning.enabled=true aktivieren, (2) Prüfen ob base_fixed_params zu restriktiv sind (min_child_samples, num_leaves, max_depth), (3) Mehr Features oder Feature-Engineering.
+16:43:09 INFO [rubin.analysis] NonParamDML model_final effektive Params: {'n_estimators': 65, 'num_leaves': 6, 'max_depth': 5, 'min_child_samples': 965, 'min_child_weight': 6.449148722228649, 'colsample_bytree': 0.34537937044605627, 'reg_alpha': 44.69715087603946, 'reg_lambda': 3.9394402449744, 'path_smooth': 16.094041222406258} (explicit_tuned=ja, fmt_fixed=False)
+16:43:09 INFO [rubin.training] NonParamDML: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/sklearn/utils/validation.py:1408: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+16:44:59 WARNING [rubin.analysis] WARNUNG: Predictions_NonParamDML hat nur 5 distinkte Werte bei 5 Folds (Range=1.68e-05, Mean=8.26e-04). Das CATE-Modell ist wahrscheinlich zu einem Intercept kollabiert. Empfehlungen: (1) final_model_tuning.enabled=true aktivieren, (2) Prüfen ob base_fixed_params zu restriktiv sind (min_child_samples, num_leaves, max_depth), (3) Mehr Features oder Feature-Engineering.
+16:45:00 INFO [rubin.training] TLearner: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
+16:45:21 INFO [rubin.analysis] Predictions_TLearner: CATE min=-0.0565335, median=0.000499056, max=0.0484579, std=0.00243547, unique=375621/389988, non-zero=389988/389988
+16:50:02 INFO [rubin.training] CausalForestDML: Erzwinge sequentielle Folds (GRF nutzt intern joblib-Prozesse, die in Threads zu Deadlocks führen).
+16:50:02 INFO [rubin.training] CausalForestDML: 5 Folds sequentiell.
+16:56:44 INFO [rubin.analysis] Predictions_CausalForestDML: CATE min=-0.00547924, median=0.000720607, max=0.00860707, std=0.000398421, unique=389444/389988, non-zero=389988/389988
+16:56:44 INFO [rubin.analysis] [rubin] Step 5/8: Evaluation & Metriken
 
 
 [rubin] Step 1/8: Daten laden & Preprocessing
