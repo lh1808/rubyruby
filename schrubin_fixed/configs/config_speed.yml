@@ -1,0 +1,58 @@
+# ============================================================
+# SPEED-TUNING – Single-Fold überall, für große Datensätze
+# ============================================================
+# Nutzt Single-Fold-Tuning für Base-Learner und Final-Model.
+# Reduziert Modell-Fits um bis zu 5×. Ideal für schnelle
+# Iterationen oder Datensätze >500k Zeilen.
+
+mlflow:
+  experiment_name: rubin_speed
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+  s_file: null
+
+treatment:
+  type: binary
+  reference_group: 0
+
+data_processing:
+  validate_on: cross
+  cross_validation_splits: 5
+  reduce_memory: true
+
+models:
+  models_to_train: [SLearner, TLearner, NonParamDML, DRLearner]
+
+base_learner:
+  type: lgbm
+
+tuning:
+  enabled: true
+  n_trials: 50
+  cv_splits: 5
+  single_fold: true                    # ← Kernfeature: 1 Fold pro Trial
+  metric: log_loss
+
+final_model_tuning:
+  enabled: true
+  n_trials: 25
+  cv_splits: 5
+  models: [NonParamDML]                # DRLearner nutzt fixed_params (günstiger)
+  # single_fold nur relevant wenn DRLearner in models (NonParamDML nutzt RScorer = immer 1 Fit)
+  fixed_params: {}
+
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true
+
+bundle:
+  enabled: true
+  include_challengers: true
+  log_to_mlflow: true
