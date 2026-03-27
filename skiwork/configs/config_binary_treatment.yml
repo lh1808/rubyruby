@@ -1,0 +1,103 @@
+# ============================================================
+# Binary Treatment Konfiguration
+# ============================================================
+# Explizite Konfiguration für Binary Treatment (T ∈ {0, 1}).
+# Alle sieben kausalen Learner sind verfügbar, inklusive der
+# Meta-Learner (S/T/X), die bei Multi-Treatment nicht nutzbar sind.
+#
+# Gegenstück zu config_multi_treatment.yml.
+#
+#   python run_analysis.py --config configs/config_binary_treatment.yml --export-bundle
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_binary_treatment
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+  # s_file: data/processed/S.parquet   # Optional: historischer Score
+
+# --- Treatment -----------------------------------------------
+treatment:
+  type: binary
+  reference_group: 0
+
+# --- Datenverarbeitung ---------------------------------------
+data_processing:
+  validate_on: cross
+  cross_validation_splits: 5
+  reduce_memory: true
+
+# --- Feature-Selektion (optional) ---------------------------
+feature_selection:
+  enabled: false
+  methods: [lgbm_importance]
+  top_pct: 15.0
+  correlation_threshold: 0.9
+
+# --- Modellauswahl -------------------------------------------
+# Alle 7 Modelle: Meta-Learner (S/T/X) + DML-Familie + DRLearner.
+# Bei Binary Treatment stehen alle zur Verfügung.
+# Hinweis: CausalForestDML basiert auf GRF und kann keine fehlenden
+# Werte verarbeiten. Bei NaN in den Daten wird CausalForestDML
+# automatisch übersprungen.
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+    - XLearner
+    - DRLearner
+    - NonParamDML
+    - ParamDML
+    - CausalForestDML
+
+# --- Base Learner --------------------------------------------
+base_learner:
+  type: lgbm
+  fixed_params: {}
+
+# --- Base-Learner-Tuning -------------------------------------
+tuning:
+  enabled: true
+  n_trials: 30
+  cv_splits: 5
+  metric: log_loss
+
+# --- CausalForestDML ----------------------------------------
+causal_forest:
+  forest_fixed_params:
+    n_jobs: -1
+  use_econml_tune: true
+  econml_tune_params: auto
+  tune_max_rows: 200000
+
+# --- Final-Model-Tuning (R-Score) ---------------------------
+# Optimiert das model_final für NonParamDML (RScorer) und DRLearner (score).
+# CausalForestDML nutzt stattdessen EconMLs tune() (siehe oben).
+final_model_tuning:
+  enabled: false
+  n_trials: 20
+  cv_splits: 5
+
+# --- Champion-Auswahl ----------------------------------------
+  models: [NonParamDML, DRLearner]
+  single_fold: true
+selection:
+  metric: qini
+  higher_is_better: true
+  refit_champion_on_full_data: true
+
+# --- Surrogate -----------------------------------------------
+surrogate_tree:
+  enabled: false
+
+# --- Bundle-Export -------------------------------------------
+bundle:
+  enabled: true
+  include_challengers: true
+  log_to_mlflow: true

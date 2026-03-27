@@ -1,0 +1,38 @@
+# ============================================================
+# QUICK START – Schneller Einstieg
+# ============================================================
+# Minimale Config: zwei Modelle, kein Tuning, kein Bundle.
+# Ideal zum Testen, ob die Pipeline auf den eigenen Daten läuft.
+#
+#   python run_analysis.py --config configs/config_quickstart.yml
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_quickstart
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+
+models:
+  models_to_train:
+    - SLearner
+    - TLearner
+
+base_learner:
+  type: lgbm
+  fixed_params: {}
+
+tuning:
+  enabled: false
+
+bundle:
+  enabled: false
+
+selection:
+  metric: qini
+  higher_is_better: true
