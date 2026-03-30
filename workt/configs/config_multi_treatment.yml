@@ -1,0 +1,55 @@
+# ============================================================
+# Multi-Treatment Konfiguration
+# ============================================================
+# Beispielkonfiguration für Multi-Treatment (T in {0, 1, 2, ...}).
+# SLearner, TLearner und XLearner sind bei Multi-Treatment nicht
+# verfuegbar. Stattdessen werden DML-basierte Modelle und DRLearner
+# verwendet, die Multi-Treatment nativ unterstuetzen.
+# ============================================================
+
+mlflow:
+  experiment_name: rubin_multi_treatment
+
+constants:
+  SEED: 42
+
+data_files:
+  x_file: data/processed/X.parquet
+  t_file: data/processed/T.parquet
+  y_file: data/processed/Y.parquet
+
+data_processing:
+  validate_on: cross
+  cross_validation_splits: 5
+
+# Multi-Treatment aktivieren
+treatment:
+  type: multi
+  reference_group: 0
+
+models:
+  models_to_train:
+    - NonParamDML
+    - DRLearner
+    - CausalForestDML
+
+base_learner:
+  type: lgbm
+  fixed_params: {}
+
+tuning:
+  enabled: true
+  n_trials: 30
+
+# Bei Multi-Treatment ist policy_value die relevantere Metrik
+# für die Champion-Auswahl als der einfache Qini-Koeffizient.
+selection:
+  metric: policy_value
+  higher_is_better: true
+  refit_champion_on_full_data: true
+
+bundle:
+  enabled: true
+  base_dir: bundles
+  include_challengers: true
+  log_to_mlflow: true
